@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A5 Obituary Program - 4 Pages</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #2c2c2c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            max-width: 280px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .controls h3 {
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+
+        .controls button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .controls button:hover {
+            background: #2563eb;
+        }
+
+        .booklet {
+            width: 297mm; /* A4 width for two A5 pages side by side */
+            height: 210mm; /* A5 height */
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .page {
+            width: 148.5mm; /* A5 width */
+            height: 210mm; /* A5 height */
+            background: white;
+            padding: 15mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Front and back covers */
+        .page-1, .page-4 {
+            background: linear-gradient(135deg, #f8f6f0 0%, #e8e2d4 100%);
+        }
+
+        /* Inner pages */
+        .page-2, .page-3 {
+            background: #fff;
+        }
+
+        /* PAGE 1 - FRONT COVER */
+        .cover-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #2c2c2c;
+            margin-bottom: 8px;
+            text-align: center;
+            margin-top: 20mm;
+        }
+
+        .cover-subtitle {
+            font-size: 14px;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .main-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #ddd;
+            margin: 0 auto 30px;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            border: 4px solid white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-photo:empty::before {
+            content: 'Click to add photo';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            width: 80px;
+        }
+
+        .dates {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .cover-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-style: italic;
+            color: #555;
+            text-align: center;
+            margin-top: 30mm;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* PAGE 2 - OBITUARY */
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #2c2c2c;
+            margin-bottom: 5px;
+        }
+
+        .small-photo {
+            width: 70px;
+            height: 70px;
+            float: right;
+            margin: 0 0 15px 15px;
+            border-radius: 4px;
+            background: #ddd;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .obituary-text {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #444;
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-content {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* PAGE 3 - ORDER OF SERVICE */
+        .service-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #2c2c2c;
+            margin-bottom: 5px;
+        }
+
+        .service-subtitle {
+            font-size: 14px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .service-details {
+            background: #f8f6f0;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-left: 3px solid #2c2c2c;
+            font-size: 11px;
+        }
+
+        .order-list {
+            list-style: none;
+        }
+
+        .order-item {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px dotted #ddd;
+            font-size: 12px;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-number {
+            font-weight: 600;
+            color: #2c2c2c;
+            min-width: 25px;
+        }
+
+        .item-content {
+            flex-grow: 1;
+        }
+
+        .item-title {
+            font-weight: 500;
+            color: #2c2c2c;
+            margin-bottom: 2px;
+        }
+
+        .item-detail {
+            color: #888;
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        /* PAGE 4 - BACK COVER */
+        .acknowledgments {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .ack-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: #2c2c2c;
+            margin-bottom: 15px;
+        }
+
+        .ack-text {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .pallbearers {
+            margin-bottom: 20px;
+        }
+
+        .pallbearers-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .pallbearers-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .final-quote {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            margin-top: 15px;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .quote-author {
+            font-size: 10px;
+            color: #aaa;
+            letter-spacing: 1px;
+        }
+
+        /* Decorative elements */
+        .corner-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            opacity: 0.1;
+        }
+
+        .corner-tl {
+            top: 10px;
+            left: 10px;
+            border-top: 2px solid #2c2c2c;
+            border-left: 2px solid #2c2c2c;
+        }
+
+        .corner-tr {
+            top: 10px;
+            right: 10px;
+            border-top: 2px solid #2c2c2c;
+            border-right: 2px solid #2c2c2c;
+        }
+
+        .corner-bl {
+            bottom: 10px;
+            left: 10px;
+            border-bottom: 2px solid #2c2c2c;
+            border-left: 2px solid #2c2c2c;
+        }
+
+        .corner-br {
+            bottom: 10px;
+            right: 10px;
+            border-bottom: 2px solid #2c2c2c;
+            border-right: 2px solid #2c2c2c;
+        }
+
+        /* Editable styles */
+        [contenteditable="true"] {
+            outline: none;
+            padding: 2px;
+            border-radius: 2px;
+            transition: background-color 0.2s;
+        }
+
+        [contenteditable="true"]:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        [contenteditable="true"]:focus {
+            background-color: rgba(59, 130, 246, 0.15);
+        }
+
+        /* Print styles - FIXED for PDF export */
+        @media print {
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                background: white !important;
+            }
+            
+            body {
+                display: block;
+            }
+            
+            .controls {
+                display: none !important;
+            }
+            
+            .booklet {
+                width: 297mm;
+                height: 210mm;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                display: block;
+                position: relative;
+                page-break-after: always;
+            }
+            
+            .page {
+                width: 148.5mm;
+                height: 210mm;
+                page-break-after: always;
+                position: relative;
+                display: block;
+                float: left;
+                background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Ensure gradients and backgrounds print */
+            .page-1, .page-4 {
+                background: linear-gradient(135deg, #f8f6f0 0%, #e8e2d4 100%) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Force show all images */
+            .main-photo, .small-photo {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Remove any interactive elements */
+            [contenteditable="true"] {
+                border: none !important;
+                background: transparent !important;
+            }
+            
+            [onclick] {
+                pointer-events: none;
+            }
+            
+            input {
+                display: none !important;
+            }
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h3>Edit & Save</h3>
+        <p>• Click any text to edit<br>
+        • Click photos to upload<br>
+        • Use Save Draft to store locally</p>
+        <button onclick="saveDraft()">Save Draft</button>
+        <button onclick="loadDraft()">Load Draft</button>
+        <button onclick="printPDF()">Print/Save PDF</button>
+        <p style="margin-top: 10px; font-size: 11px; color: #ccc;">For best PDF results:<br>1. Use Chrome browser<br>2. Check "Background graphics" in print settings</p>
+    </div>
+
+    <div class="booklet">
+        <!-- PAGE 1 - FRONT COVER -->
+        <div class="page page-1">
+            <div class="corner-decoration corner-tl"></div>
+            <div class="corner-decoration corner-tr"></div>
+            <div class="corner-decoration corner-bl"></div>
+            <div class="corner-decoration corner-br"></div>
+            
+            <div class="cover-title" contenteditable="true">CATHERINE</div>
+            <div class="cover-subtitle" contenteditable="true">Beloved Mother & Grandmother</div>
+            
+            <div class="main-photo" onclick="uploadPhoto('main-photo')">
+                <input type="file" id="main-photo" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+            </div>
+            
+            <div class="dates" contenteditable="true">January 15, 1945 - August 12, 2024</div>
+            
+            <div class="cover-quote" contenteditable="true">
+                "A life beautifully lived deserves to be beautifully remembered"
+            </div>
+        </div>
+
+        <!-- PAGE 2 - OBITUARY -->
+        <div class="page page-2">
+            <div class="corner-decoration corner-tl"></div>
+            <div class="corner-decoration corner-tr"></div>
+            <div class="corner-decoration corner-bl"></div>
+            <div class="corner-decoration corner-br"></div>
+            
+            <div class="page-header">
+                <div class="page-title">Obituary</div>
+            </div>
+
+            <div class="small-photo" onclick="uploadPhoto('small-photo1')">
+                <input type="file" id="small-photo1" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+            </div>
+
+            <div class="obituary-text" contenteditable="true">
+                Catherine Johnson peacefully passed away on August 12, 2024, at the age of 79, surrounded by her loving family. Born in Cape Town on January 15, 1945, she was the cherished daughter of Mary and Robert Williams.
+
+                Catherine was a devoted wife to her late husband John for 45 beautiful years, and a loving mother to their three children: Sarah, Michael, and David. Her greatest joy came from being a grandmother to seven wonderful grandchildren who brought endless laughter and love to her life.
+
+                A woman of strong faith and compassion, Catherine dedicated her life to serving others. She worked as a nurse for over 30 years at Groote Schuur Hospital, touching countless lives with her gentle care and unwavering dedication. Her colleagues remember her as someone who always had a kind word and a helping hand.
+            </div>
+
+            <div class="section">
+                <div class="section-title">Survived By</div>
+                <div class="section-content" contenteditable="true">
+                    Children: Sarah Johnson-Smith (Peter), Michael Johnson (Linda), David Johnson (Karen)<br>
+                    Grandchildren: Emma, James, Luke, Sophie, Oliver, Grace, and Benjamin<br>
+                    Sister: Margaret Williams<br>
+                    Extended family and countless friends
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Hobbies & Interests</div>
+                <div class="section-content" contenteditable="true">
+                    Catherine loved gardening and spent countless hours tending to her roses. She was an accomplished cook who delighted in hosting family gatherings. She enjoyed reading, particularly historical novels, and was an active member of her local book club for over 20 years.
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3 - ORDER OF SERVICE -->
+        <div class="page page-3">
+            <div class="corner-decoration corner-tl"></div>
+            <div class="corner-decoration corner-tr"></div>
+            <div class="corner-decoration corner-bl"></div>
+            <div class="corner-decoration corner-br"></div>
+            
+            <div class="service-header">
+                <div class="service-title">Order of Service</div>
+                <div class="service-subtitle">A Celebration of Life</div>
+            </div>
+
+            <div class="service-details">
+                <div contenteditable="true"><strong>Date:</strong> Saturday, August 17, 2024</div>
+                <div contenteditable="true"><strong>Time:</strong> 11:00 AM</div>
+                <div contenteditable="true"><strong>Venue:</strong> St. Mary's Anglican Church</div>
+                <div contenteditable="true"><strong>Address:</strong> 123 Church Street, Cape Town</div>
+                <div contenteditable="true"><strong>Officiating:</strong> Reverend James Mitchell</div>
+            </div>
+
+            <ol class="order-list">
+                <li class="order-item">
+                    <span class="item-number">1.</span>
+                    <div class="item-content">
+                        <div class="item-title" contenteditable="true">Welcome & Opening Prayer</div>
+                        <div class="item-detail" contenteditable="true">Reverend James Mitchell</div>
+                    </div>
+                </li>
+                <li class="order-item">
+                    <span class="item-number">2.</span>
+                    <div class="item-content">
+                        <div class="item-title" contenteditable="true">Hymn</div>
+                        <div class="item-detail" contenteditable="true">"Amazing Grace" - Congregation</div>
+                    </div>
+                </li>
+                <li class="order-item">
+                    <span class="item-number">3.</span>
+                    <div class="item-content">
+                        <div class="item-title" contenteditable="true">Scripture Reading</div>
+                        <div class="item-detail" contenteditable="true">Psalm 23 - Sarah Johnson-Smith</div>
+                    </div>
+                </li>
+                <li class="order-item">
+                    <span class="item-number">4.</span>
+                    <div class="item-content">
+                        <div class="item-title" contenteditable="true">Eulogy</div>
+                        <div class="item-detail" contenteditable="true">Michael Johnson (Son)</div>
+                    </div>
+                </li>
+                <li class="order-item">
+                    <span class="item-number">5.</span>
+                    <div class="item-content">
+                        <div class="item-title" contenteditable="true">Musical Tribute</div>
+                        <div class="item-detail" contenteditable="true">"How Great Thou Art" - Church Choir</div>
+                    </div>
+                </li>
+                <li class="order-item">
+                    <span class="item-number">6.</span>
+                    <div class="item-content">
+                        <div class="item-title" contenteditable="true">Closing Prayer & Blessing</div>
+                        <div class="item-detail" contenteditable="true">Reverend James Mitchell</div>
+                    </div>
+                </li>
+                <li class="order-item">
+                    <span class="item-number">7.</span>
+                    <div class="item-content">
+                        <div class="item-title" contenteditable="true">Committal</div>
+                        <div class="item-detail" contenteditable="true">Maitland Cemetery - Family & Close Friends</div>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+        <!-- PAGE 4 - BACK COVER -->
+        <div class="page page-4">
+            <div class="corner-decoration corner-tl"></div>
+            <div class="corner-decoration corner-tr"></div>
+            <div class="corner-decoration corner-bl"></div>
+            <div class="corner-decoration corner-br"></div>
+            
+            <div class="acknowledgments">
+                <div class="ack-title">Acknowledgments</div>
+                <div class="ack-text" contenteditable="true">
+                    The family of Catherine Johnson wishes to express our heartfelt gratitude to all who have shown love, support, and kindness during this difficult time. Your prayers, flowers, food, and presence have been a source of great comfort.
+
+                    Special thanks to the staff at Groote Schuur Hospital, Dr. Sarah Williams, and the wonderful caregivers who provided such compassionate care in Catherine's final days.
+                </div>
+            </div>
+
+            <div class="pallbearers">
+                <div class="pallbearers-title">Pallbearers</div>
+                <div class="pallbearers-list">
+                    <div contenteditable="true">Michael Johnson</div>
+                    <div contenteditable="true">David Johnson</div>
+                    <div contenteditable="true">James Smith</div>
+                    <div contenteditable="true">Peter Smith</div>
+                    <div contenteditable="true">Oliver Johnson</div>
+                    <div contenteditable="true">Luke Johnson</div>
+                </div>
+            </div>
+
+            <div class="final-quote">
+                <div class="quote-text" contenteditable="true">
+                    "Those we love don't go away, they walk beside us every day. 
+                    Unseen, unheard, but always near, still loved, still missed, and very dear."
+                </div>
+                <div class="quote-author" contenteditable="true">- THE JOHNSON FAMILY</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function uploadPhoto(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        function loadPhoto(input, container) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    container.style.backgroundImage = `url(${e.target.result})`;
+                    container.style.backgroundSize = 'cover';
+                    container.style.backgroundPosition = 'center';
+                    // Store the image data for PDF export
+                    container.setAttribute('data-image', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function saveDraft() {
+            try {
+                // Save all text content
+                const textData = {};
+                document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                    textData[`text_${index}`] = el.innerHTML;
+                    el.setAttribute('data-save-id', `text_${index}`);
+                });
+
+                // Save photo data
+                const photoData = {};
+                document.querySelectorAll('.main-photo, .small-photo').forEach((el, index) => {
+                    const bgImage = el.style.backgroundImage;
+                    if (bgImage && bgImage !== 'none') {
+                        photoData[`photo_${index}`] = el.getAttribute('data-image') || bgImage;
+                        el.setAttribute('data-photo-id', `photo_${index}`);
+                    }
+                });
+
+                // Save to localStorage
+                localStorage.setItem('obituaryProgram_text', JSON.stringify(textData));
+                localStorage.setItem('obituaryProgram_photos', JSON.stringify(photoData));
+                localStorage.setItem('obituaryProgram_timestamp', new Date().toISOString());
+                
+                alert('Draft saved successfully!');
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving draft. Please try again.');
+            }
+        }
+
+        function loadDraft() {
+            try {
+                const textData = JSON.parse(localStorage.getItem('obituaryProgram_text') || '{}');
+                const photoData = JSON.parse(localStorage.getItem('obituaryProgram_photos') || '{}');
+                const timestamp = localStorage.getItem('obituaryProgram_timestamp');
+
+                if (Object.keys(textData).length === 0) {
+                    alert('No saved draft found.');
+                    return;
+                }
+
+                // Restore text content
+                document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                    const saveId = `text_${index}`;
+                    if (textData[saveId]) {
+                        el.innerHTML = textData[saveId];
+                        el.setAttribute('data-save-id', saveId);
+                    }
+                });
+
+                // Restore photos
+                document.querySelectorAll('.main-photo, .small-photo').forEach((el, index) => {
+                    const photoId = `photo_${index}`;
+                    if (photoData[photoId]) {
+                        el.style.backgroundImage = `url(${photoData[photoId]})`;
+                        el.style.backgroundSize = 'cover';
+                        el.style.backgroundPosition = 'center';
+                        el.setAttribute('data-image', photoData[photoId]);
+                        el.setAttribute('data-photo-id', photoId);
+                    }
+                });
+
+                const date = timestamp ? new Date(timestamp).toLocaleString() : 'Unknown time';
+                alert(`Draft loaded successfully! Last saved: ${date}`);
+            } catch (error) {
+                console.error('Load error:', error);
+                alert('Error loading draft. The saved data may be corrupted.');
+            }
+        }
+
+        function printPDF() {
+            // First save the current state
+            saveDraft();
+            
+            // Then trigger print
+            window.print();
+        }
+
+        // Auto-save on edit
+        document.addEventListener('input', function(e) {
+            if (e.target.contentEditable === 'true') {
+                // Auto-save every 10 seconds after changes
+                clearTimeout(window.autoSaveTimeout);
+                window.autoSaveTimeout = setTimeout(() => {
+                    try {
+                        const textData = {};
+                        document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                            textData[`text_${index}`] = el.innerHTML;
+                        });
+                        localStorage.setItem('obituaryProgram_autosave', JSON.stringify(textData));
+                        console.log('Auto-saved');
+                    } catch (error) {
+                        console.error('Auto-save failed:', error);
+                    }
+                }, 10000);
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Check for auto-save
+            const autoSaved = localStorage.getItem('obituaryProgram_autosave');
+            if (autoSaved && !localStorage.getItem('obituaryProgram_text')) {
+                if (confirm('Found auto-saved content from your last session. Would you like to load it?')) {
+                    try {
+                        const textData = JSON.parse(autoSaved);
+                        document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                            const saveId = `text_${index}`;
+                            if (textData[saveId]) {
+                                el.innerHTML = textData[saveId];
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Auto-load failed:', error);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

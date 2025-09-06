@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catherine Johnson - Obituary Program</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #2c2c2c;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            width: 280px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .controls h3 {
+            margin-bottom: 12px;
+            color: #9F7A49;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls h3 i {
+            font-size: 18px;
+        }
+
+        .controls button {
+            background: #9F7A49;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .controls button:hover {
+            background: #8a6a3d;
+            transform: translateY(-2px);
+        }
+
+        .booklet-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .booklet {
+            width: 297mm; /* A4 width for two A5 pages side by side */
+            height: 210mm; /* A5 height */
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .page {
+            width: 148.5mm; /* A5 width */
+            height: 210mm; /* A5 height */
+            background: white;
+            padding: 15mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Page backgrounds */
+        .page-1 {
+            background: linear-gradient(135deg, #f8f6f0 0%, #e8e2d4 100%);
+        }
+
+        .page-2 {
+            background: #000;
+            color: #fff;
+        }
+
+        .page-3 {
+            background: #f8f6f0;
+        }
+
+        .page-4 {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Typography */
+        .cover-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 15mm;
+            color: #2c2c2c;
+            line-height: 1.1;
+        }
+
+        .cover-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: #9F7A49;
+            font-style: italic;
+            text-align: center;
+            margin-top: 8mm;
+            font-weight: 500;
+        }
+
+        .dates {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin: 5mm 0;
+            font-weight: 400;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #9F7A49;
+            margin: 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c2c2c;
+            text-align: center;
+            margin: 10px 0 20px;
+        }
+
+        .black-bg {
+            color: #fff;
+            border-bottom: 1px solid #555;
+        }
+
+        /* Photo containers - RECTANGULAR */
+        .photo-container {
+            width: 120px;
+            height: 170px;
+            margin: 15px auto;
+            background: #ddd;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .photo-container:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .photo-container:empty::before {
+            content: 'Click to add photo';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            width: 90px;
+        }
+
+        .photo-container i {
+            font-size: 24px;
+            color: #999;
+        }
+
+        /* Photo editing controls */
+        .photo-controls {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            display: none;
+            justify-content: center;
+            gap: 5px;
+            background: rgba(0,0,0,0.7);
+            padding: 5px;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        .photo-container:hover .photo-controls {
+            display: flex;
+        }
+
+        .photo-controls button {
+            background: #9F7A49;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .photo-controls button:hover {
+            background: #8a6a3d;
+        }
+
+        /* Content styles */
+        .obituary-text {
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: justify;
+            margin: 10px 0;
+        }
+
+        .service-details {
+            background: rgba(159, 122, 73, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .service-details div {
+            margin: 5px 0;
+        }
+
+        .order-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .order-item {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px dotted #e0e0e0;
+            font-size: 13px;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-number {
+            font-weight: 600;
+            color: #9F7A49;
+            min-width: 25px;
+        }
+
+        .item-content {
+            flex-grow: 1;
+        }
+
+        .item-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .item-detail {
+            color: #666;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .dark-text {
+            color: #fff;
+        }
+
+        .pallbearers-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .final-quote {
+            font-style: italic;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Page 2 specific styles */
+        .page-2-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .page-2-content::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .page-2-content::-webkit-scrollbar-thumb {
+            background: #9F7A49;
+            border-radius: 10px;
+        }
+
+        .img-with-text {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .img-with-text .photo-container {
+            width: 170px;
+            height: 120px;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .img-with-text .small-text {
+            flex-grow: 1;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #9F7A49, transparent);
+            margin: 15px 0;
+        }
+
+        .small-text {
+            font-size: 11px;
+            text-align: center;
+            color: #aaa;
+            margin: 5px 0;
+        }
+
+        /* Page 4 specific styles */
+        .page-4-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        .testimonial-author {
+            text-align: right;
+            font-size: 12px;
+            margin-top: 10px;
+            color: #9F7A49;
+        }
+
+        /* Decorative elements */
+        .corner-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            opacity: 0.2;
+        }
+
+        .corner-tl {
+            top: 10px;
+            left: 10px;
+            border-top: 2px solid #9F7A49;
+            border-left: 2px solid #9F7A49;
+        }
+
+        .corner-tr {
+            top: 10px;
+            right: 10px;
+            border-top: 2px solid #9F7A49;
+            border-right: 2px solid #9F7A49;
+        }
+
+        .corner-bl {
+            bottom: 10px;
+            left: 10px;
+            border-bottom: 2px solid #9F7A49;
+            border-left: 2px solid #9F7A49;
+        }
+
+        .corner-br {
+            bottom: 10px;
+            right: 10px;
+            border-bottom: 2px solid #9F7A49;
+            border-right: 2px solid #9F7A49;
+        }
+
+        /* Photo editor modal */
+        .editor-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .editor-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .editor-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .editor-group {
+            margin-bottom: 15px;
+        }
+
+        .editor-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .editor-group input[type="range"],
+        .editor-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .editor-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .editor-buttons button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .editor-buttons button.primary {
+            background: #9F7A49;
+            color: white;
+        }
+
+        /* Print styles - FIXED for proper PDF output */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                background: white !important;
+            }
+            
+            body {
+                display: block;
+            }
+            
+            .controls, .photo-controls, .editor-modal {
+                display: none !important;
+            }
+            
+            .booklet-container {
+                width: 100% !important;
+                overflow: visible !important;
+                padding: 0 !important;
+            }
+            
+            .booklet {
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            
+            /* Two pages per sheet layout */
+            .page {
+                width: 50% !important;
+                height: 100vh !important;
+                display: inline-block !important;
+                float: left !important;
+                position: relative;
+                background: white !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Sheet 1: Pages 1 (left) & 2 (right) */
+            .page-1 {
+                page-break-after: always;
+            }
+            
+            /* Sheet 2: Pages 3 (left) & 4 (right) */
+            .page-3 {
+                page-break-after: always;
+            }
+            
+            /* Ensure black backgrounds print */
+            .page-2, .page-4 {
+                background: #000 !important;
+                color: #fff !important;
+            }
+            
+            /* Clean up interactive elements */
+            input[type="file"] {
+                display: none !important;
+            }
+            
+            [contenteditable="true"] {
+                border: none !important;
+                background: transparent !important;
+            }
+            
+            .photo-container:hover {
+                transform: none !important;
+            }
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h3><i class="fas fa-edit"></i> Edit & Save</h3>
+        <p>• Click any text to edit<br>
+        • Click photos to upload images<br>
+        • Use photo controls to customize<br>
+        • Save your progress with the button below</p>
+        <button onclick="saveDraft()"><i class="fas fa-save"></i> Save Draft</button>
+        <button onclick="loadDraft()"><i class="fas fa-folder-open"></i> Load Draft</button>
+        <button onclick="printPDF()"><i class="fas fa-print"></i> Print/Save PDF</button>
+        <p style="margin-top: 10px; font-size: 11px; color: #ccc;">For best PDF results:<br>1. Use Chrome browser<br>2. Check "Background graphics" in print settings</p>
+    </div>
+
+    <!-- Photo Editor Modal -->
+    <div class="editor-modal" id="photoEditor">
+        <div class="editor-content">
+            <h3>Edit Photo</h3>
+            <div class="editor-controls">
+                <div class="editor-group">
+                    <label for="photoWidth">Width</label>
+                    <input type="range" id="photoWidth" min="50" max="300" value="120" oninput="updatePhotoStyle()">
+                    <span id="widthValue">120px</span>
+                </div>
+                <div class="editor-group">
+                    <label for="photoHeight">Height</label>
+                    <input type="range" id="photoHeight" min="50" max="300" value="150" oninput="updatePhotoStyle()">
+                    <span id="heightValue">150px</span>
+                </div>
+                <div class="editor-group">
+                    <label for="photoBorder">Border Width</label>
+                    <input type="range" id="photoBorder" min="0" max="20" value="4" oninput="updatePhotoStyle()">
+                    <span id="borderValue">4px</span>
+                </div>
+                <div class="editor-group">
+                    <label for="photoBorderColor">Border Color</label>
+                    <input type="color" id="photoBorderColor" value="#ffffff" oninput="updatePhotoStyle()">
+                </div>
+                <div class="editor-group">
+                    <label for="photoShape">Shape</label>
+                    <select id="photoShape" oninput="updatePhotoStyle()">
+                        <option value="rectangle">Rectangle</option>
+                        <option value="rounded">Rounded Corners</option>
+                        <option value="circle">Circle</option>
+                        <option value="oval">Oval</option>
+                    </select>
+                </div>
+                <div class="editor-group">
+                    <label for="photoShadow">Shadow</label>
+                    <select id="photoShadow" oninput="updatePhotoStyle()">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </div>
+            <div class="editor-buttons">
+                <button onclick="closeEditor()">Cancel</button>
+                <button class="primary" onclick="applyPhotoChanges()">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="booklet-container">
+        <div class="booklet">
+            <!-- PAGE 1 - FRONT COVER -->
+            <div class="page page-1">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+                
+                <div class="cover-title" contenteditable="true">Catherine Johnson</div>
+                
+                <div class="cover-subtitle" contenteditable="true">Beloved Mother, Grandmother & Friend</div>
+                
+                <div class="photo-container" onclick="uploadPhoto('main-photo')" style="width: 70%;" data-shape="rectangle" data-shadow="medium">
+                    <input type="file" id="main-photo" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+                    <i class="fas fa-camera"></i>
+                    <div class="photo-controls">
+                        <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                        <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -10)"><i class="fas fa-search-minus"></i></button>
+                        <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 10)"><i class="fas fa-search-plus"></i></button>
+                    </div>
+                </div>
+                
+                <div class="dates" contenteditable="true">January 15, 1945 - August 12, 2024</div>
+                
+                <div class="cover-subtitle" contenteditable="true">"A life beautifully lived deserves to be beautifully remembered"</div>
+            </div>
+
+            
+
+            <!-- PAGE 2 - OBITUARY (BLACK) -->
+             <div class="page page-4">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+                
+                <div class="page-4-content">
+                    <div class="photo-container" onclick="uploadPhoto('acknowledgment-photo')" style="width: 100%; height: 180px;" data-shape="rectangle" data-shadow="medium">
+                        <input type="file" id="acknowledgment-photo" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+                        <i class="fas fa-camera"></i>
+                        <div class="photo-controls">
+                            <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                            <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -10)"><i class="fas fa-search-minus"></i></button>
+                            <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 10)"><i class="fas fa-search-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="page-title dark-text">Acknowledgments</div>
+                        <div class="obituary-text dark-text" contenteditable="true">
+                            The family of Catherine Johnson wishes to express our heartfelt gratitude to all who have shown love, support, and kindness during this difficult time. Your prayers, flowers, food, and presence have been a source of great comfort.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial dark-text" contenteditable="true">
+                    "Catherine was the heart of our family. Her kindness and wisdom guided us through life's challenges."
+                    <div class="testimonial-author">- Sarah Johnson-Smith</div>
+                </div>
+
+                <div class="testimonial dark-text" contenteditable="true">
+                    "She was more than a colleague; she was a mentor and friend to everyone at the hospital."
+                    <div class="testimonial-author">- Dr. Sarah Williams</div>
+                </div>
+
+                <div class="section-title black-bg">Pallbearers</div>
+                <div class="pallbearers-list">
+                    <div class="dark-text" contenteditable="true">Michael Johnson</div>
+                    <div class="dark-text" contenteditable="true">David Johnson</div>
+                    <div class="dark-text" contenteditable="true">James Smith</div>
+                    <div class="dark-text" contenteditable="true">Peter Smith</div>
+                    <div class="dark-text" contenteditable="true">Oliver Johnson</div>
+                    <div class="dark-text" contenteditable="true">Luke Johnson</div>
+                </div>
+
+                <div class="final-quote">
+                    <div class="dark-text" contenteditable="true">
+                        "Those we love don't go away, they walk beside us every day. Unseen, unheard, but always near, still loved, still missed, and very dear."
+                    </div>
+                    <div class="cover-subtitle dark-text" style="margin-top: 10px;" contenteditable="true">- The Johnson Family</div>
+                </div>
+            </div>
+
+            <!-- PAGE 3 - ORDER OF SERVICE -->
+            <div class="page page-3">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+                
+                <div class="page-title">Order of Service</div>
+                <div class="cover-subtitle" style="margin-top: 0;">A Celebration of Life</div>
+
+                <div class="service-details">
+                    <div contenteditable="true"><strong>Date:</strong> Saturday, August 17, 2024</div>
+                    <div contenteditable="true"><strong>Time:</strong> 11:00 AM</div>
+                    <div contenteditable="true"><strong>Venue:</strong> St. Mary's Anglican Church</div>
+                    <div contenteditable="true"><strong>Address:</strong> 123 Church Street, Cape Town</div>
+                    <div contenteditable="true"><strong>Officiating:</strong> Reverend James Mitchell</div>
+                </div>
+
+                <ol class="order-list">
+                    <li class="order-item">
+                        <span class="item-number">1.</span>
+                        <div class="item-content">
+                            <div class="item-title" contenteditable="true">Welcome & Opening Prayer</div>
+                            <div class="item-detail" contenteditable="true">Reverend James Mitchell</div>
+                        </div>
+                    </li>
+                    <li class="order-item">
+                        <span class="item-number">2.</span>
+                        <div class="item-content">
+                            <div class="item-title" contenteditable="true">Hymn</div>
+                            <div class="item-detail" contenteditable="true">"Amazing Grace" - Congregation</div>
+                        </div>
+                    </li>
+                    <li class="order-item">
+                        <span class="item-number">3.</span>
+                        <div class="item-content">
+                            <div class="item-title" contenteditable="true">Scripture Reading</div>
+                            <div class="item-detail" contenteditable="true">Psalm 23 - Sarah Johnson-Smith</div>
+                        </div>
+                    </li>
+                    <li class="order-item">
+                        <span class="item-number">4.</span>
+                        <div class="item-content">
+                            <div class="item-title" contenteditable="true">Eulogy</div>
+                            <div class="item-detail" contenteditable="true">Michael Johnson (Son)</div>
+                        </div>
+                    </li>
+                    <li class="order-item">
+                        <span class="item-number">5.</span>
+                        <div class="item-content">
+                            <div class="item-title" contenteditable="true">Musical Tribute</div>
+                            <div class="item-detail" contenteditable="true">"How Great Thou Art" - Church Choir</div>
+                        </div>
+                    </li>
+                    <li class="order-item">
+                        <span class="item-number">6.</span>
+                        <div class="item-content">
+                            <div class="item-title" contenteditable="true">Closing Prayer & Blessing</div>
+                            <div class="item-detail" contenteditable="true">Reverend James Mitchell</div>
+                        </div>
+                    </li>
+                    <li class="order-item">
+                        <span class="item-number">7.</span>
+                        <div class="item-content">
+                            <div class="item-title" contenteditable="true">Committal</div>
+                            <div class="item-detail" contenteditable="true">Maitland Cemetery - Family & Close Friends</div>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- PAGE 4 - ACKNOWLEDGMENTS (BLACK) -->
+            <div class="page page-2">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+                
+                <div class="page-2-content">
+                    <div class="page-title dark-text">Obituary</div>
+                    
+                    <div class="img-with-text">
+                        <div class="photo-container" onclick="uploadPhoto('obituary-photo1')" data-shape="rectangle" data-shadow="medium">
+                            <input type="file" id="obituary-photo1" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+                            <i class="fas fa-camera" style="font-size: 20px;"></i>
+                            <div class="photo-controls">
+                                <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                                <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -5)"><i class="fas fa-search-minus"></i></button>
+                                <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 5)"><i class="fas fa-search-plus"></i></button>
+                            </div>
+                        </div>
+                        <!-- <div class="photo-container" onclick="uploadPhoto('obituary-photo1')" data-shape="rectangle" data-shadow="medium">
+                            <input type="file" id="obituary-photo1" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+                            <i class="fas fa-camera" style="font-size: 20px;"></i>
+                            <div class="photo-controls">
+                                <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                                <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -5)"><i class="fas fa-search-minus"></i></button>
+                                <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 5)"><i class="fas fa-search-plus"></i></button>
+                            </div>
+                        </div> -->
+                        <div class="small-text dark-text" contenteditable="true">Catherine in her garden, 2018</div>
+                    </div>
+                    
+                    
+
+                    <div class="divider"></div>
+
+                    <div class="obituary-text dark-text" contenteditable="true">
+                        Catherine Johnson peacefully passed away on August 12, 2024, at the age of 79, surrounded by her loving family. Born in Cape Town on January 15, 1945, she was the cherished daughter of Mary and Robert Williams.
+                    </div>
+                        
+                    <div class="obituary-text dark-text" contenteditable="true">
+                        Catherine was a devoted wife to her late husband John for 45 beautiful years, and a loving mother to their three children: Sarah, Michael, and David. Her greatest joy came from being a grandmother to seven wonderful grandchildren who brought endless laughter and love to her life.
+                    </div>
+
+                    <div class="img-with-text">
+                        <div class="small-text dark-text" contenteditable="true">With her beloved husband John</div>
+                        <div class="photo-container" onclick="uploadPhoto('obituary-photo2')" data-shape="rectangle" data-shadow="medium">
+                            <input type="file" id="obituary-photo2" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+                            <i class="fas fa-camera" style="font-size: 20px;"></i>
+                            <div class="photo-controls">
+                                <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                                <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -5)"><i class="fas fa-search-minus"></i></button>
+                                <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 5)"><i class="fas fa-search-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="photo-container" onclick="uploadPhoto('obituary-photo1')" data-shape="rectangle" data-shadow="medium">
+                            <input type="file" id="obituary-photo1" accept="image/*" style="display: none;" onchange="loadPhoto(this, this.parentElement)">
+                            <i class="fas fa-camera" style="font-size: 20px;"></i>
+                            <div class="photo-controls">
+                                <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                                <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -5)"><i class="fas fa-search-minus"></i></button>
+                                <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 5)"><i class="fas fa-search-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPhoto = null;
+        const shadowPresets = {
+            small: '0 2px 8px rgba(0,0,0,0.1)',
+            medium: '0 5px 15px rgba(0,0,0,0.1)',
+            large: '0 8px 25px rgba(0,0,0,0.15)',
+            none: 'none'
+        };
+
+        function uploadPhoto(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        function loadPhoto(input, container) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    container.style.backgroundImage = `url(${e.target.result})`;
+                    container.style.backgroundSize = 'cover';
+                    container.style.backgroundPosition = 'center';
+                    container.innerHTML = '';
+                    
+                    // Add back the controls
+                    const controls = document.createElement('div');
+                    controls.className = 'photo-controls';
+                    controls.innerHTML = `
+                        <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                        <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -10)"><i class="fas fa-search-minus"></i></button>
+                        <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 10)"><i class="fas fa-search-plus"></i></button>
+                    `;
+                    container.appendChild(controls);
+                    
+                    // Store the image data for PDF export
+                    container.setAttribute('data-image', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function openEditor(photoElement) {
+            currentPhoto = photoElement;
+            const editor = document.getElementById('photoEditor');
+            
+            // Get current values
+            const width = parseInt(photoElement.style.width || photoElement.offsetWidth);
+            const height = parseInt(photoElement.style.height || photoElement.offsetHeight);
+            const border = parseInt(photoElement.style.borderWidth || 4);
+            const borderColor = photoElement.style.borderColor || 'rgb(255, 255, 255)';
+            const shape = photoElement.getAttribute('data-shape') || 'rectangle';
+            const shadow = photoElement.getAttribute('data-shadow') || 'medium';
+            
+            // Set editor values
+            document.getElementById('photoWidth').value = width;
+            document.getElementById('photoHeight').value = height;
+            document.getElementById('photoBorder').value = border;
+            document.getElementById('photoBorderColor').value = rgbToHex(borderColor);
+            document.getElementById('photoShape').value = shape;
+            document.getElementById('photoShadow').value = shadow;
+            
+            // Update value displays
+            document.getElementById('widthValue').textContent = `${width}px`;
+            document.getElementById('heightValue').textContent = `${height}px`;
+            document.getElementById('borderValue').textContent = `${border}px`;
+            
+            editor.style.display = 'flex';
+        }
+
+        function closeEditor() {
+            document.getElementById('photoEditor').style.display = 'none';
+            currentPhoto = null;
+        }
+
+        function updatePhotoStyle() {
+            if (!currentPhoto) return;
+            
+            const width = document.getElementById('photoWidth').value;
+            const height = document.getElementById('photoHeight').value;
+            const border = document.getElementById('photoBorder').value;
+            const borderColor = document.getElementById('photoBorderColor').value;
+            const shape = document.getElementById('photoShape').value;
+            const shadow = document.getElementById('photoShadow').value;
+            
+            // Update value displays
+            document.getElementById('widthValue').textContent = `${width}px`;
+            document.getElementById('heightValue').textContent = `${height}px`;
+            document.getElementById('borderValue').textContent = `${border}px`;
+            
+            // Preview changes
+            currentPhoto.style.width = `${width}px`;
+            currentPhoto.style.height = `${height}px`;
+            currentPhoto.style.borderWidth = `${border}px`;
+            currentPhoto.style.borderColor = borderColor;
+            currentPhoto.style.boxShadow = shadowPresets[shadow];
+            
+            // Apply shape
+            if (shape === 'rounded') {
+                currentPhoto.style.borderRadius = '10px';
+            } else if (shape === 'circle') {
+                currentPhoto.style.borderRadius = '50%';
+            } else if (shape === 'oval') {
+                currentPhoto.style.borderRadius = '50%';
+                // For oval, we'll adjust the aspect ratio
+                currentPhoto.style.width = `${width}px`;
+                currentPhoto.style.height = `${width * 0.7}px`;
+                document.getElementById('photoHeight').value = width * 0.7;
+                document.getElementById('heightValue').textContent = `${Math.round(width * 0.7)}px`;
+            } else {
+                currentPhoto.style.borderRadius = '0';
+            }
+            
+            // Store settings
+            currentPhoto.setAttribute('data-shape', shape);
+            currentPhoto.setAttribute('data-shadow', shadow);
+        }
+
+        function applyPhotoChanges() {
+            closeEditor();
+            saveDraft(); // Auto-save after changes
+        }
+
+        function resizePhoto(photoElement, amount) {
+            const currentWidth = parseInt(photoElement.style.width || photoElement.offsetWidth);
+            const currentHeight = parseInt(photoElement.style.height || photoElement.offsetHeight);
+            
+            const newWidth = Math.max(50, currentWidth + amount);
+            const newHeight = Math.max(50, currentHeight + amount);
+            
+            photoElement.style.width = `${newWidth}px`;
+            photoElement.style.height = `${newHeight}px`;
+            
+            saveDraft(); // Auto-save after changes
+        }
+
+        function rgbToHex(rgb) {
+            // If the color is already in hex format, return it
+            if (rgb.startsWith('#')) return rgb;
+            
+            // Convert rgb(r, g, b) to hex
+            const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            if (!match) return '#ffffff';
+            
+            return '#' + 
+                parseInt(match[1]).toString(16).padStart(2, '0') +
+                parseInt(match[2]).toString(16).padStart(2, '0') +
+                parseInt(match[3]).toString(16).padStart(2, '0');
+        }
+
+        function saveDraft() {
+            try {
+                // Save all text content
+                const textData = {};
+                document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                    textData[`text_${index}`] = el.innerHTML;
+                    el.setAttribute('data-save-id', `text_${index}`);
+                });
+
+                // Save photo data and styles
+                const photoData = {};
+                const photoStyles = {};
+                
+                document.querySelectorAll('.photo-container').forEach((el, index) => {
+                    const bgImage = el.style.backgroundImage;
+                    if (bgImage && bgImage !== 'none') {
+                        photoData[`photo_${index}`] = el.getAttribute('data-image') || bgImage;
+                        el.setAttribute('data-photo-id', `photo_${index}`);
+                    }
+                    
+                    // Save style information
+                    photoStyles[`photo_${index}`] = {
+                        width: el.style.width,
+                        height: el.style.height,
+                        border: el.style.borderWidth,
+                        borderColor: el.style.borderColor,
+                        borderRadius: el.style.borderRadius,
+                        boxShadow: el.style.boxShadow,
+                        shape: el.getAttribute('data-shape'),
+                        shadow: el.getAttribute('data-shadow')
+                    };
+                });
+
+                // Save to localStorage
+                localStorage.setItem('obituaryProgram_text', JSON.stringify(textData));
+                localStorage.setItem('obituaryProgram_photos', JSON.stringify(photoData));
+                localStorage.setItem('obituaryProgram_styles', JSON.stringify(photoStyles));
+                localStorage.setItem('obituaryProgram_timestamp', new Date().toISOString());
+                
+                console.log('Draft saved successfully!');
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving draft. Please try again.');
+            }
+        }
+
+        function loadDraft() {
+            try {
+                const textData = JSON.parse(localStorage.getItem('obituaryProgram_text') || '{}');
+                const photoData = JSON.parse(localStorage.getItem('obituaryProgram_photos') || '{}');
+                const photoStyles = JSON.parse(localStorage.getItem('obituaryProgram_styles') || '{}');
+                const timestamp = localStorage.getItem('obituaryProgram_timestamp');
+
+                if (Object.keys(textData).length === 0) {
+                    alert('No saved draft found.');
+                    return;
+                }
+
+                // Restore text content
+                document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                    const saveId = `text_${index}`;
+                    if (textData[saveId]) {
+                        el.innerHTML = textData[saveId];
+                        el.setAttribute('data-save-id', saveId);
+                    }
+                });
+
+                // Restore photos and their styles
+                document.querySelectorAll('.photo-container').forEach((el, index) => {
+                    const photoId = `photo_${index}`;
+                    
+                    // Restore image
+                    if (photoData[photoId]) {
+                        el.style.backgroundImage = `url(${photoData[photoId]})`;
+                        el.style.backgroundSize = 'cover';
+                        el.style.backgroundPosition = 'center';
+                        el.innerHTML = '';
+                        
+                        // Add controls
+                        const controls = document.createElement('div');
+                        controls.className = 'photo-controls';
+                        controls.innerHTML = `
+                            <button title="Edit Photo" onclick="openEditor(this.parentElement.parentElement)"><i class="fas fa-edit"></i></button>
+                            <button title="Make Smaller" onclick="resizePhoto(this.parentElement.parentElement, -10)"><i class="fas fa-search-minus"></i></button>
+                            <button title="Make Larger" onclick="resizePhoto(this.parentElement.parentElement, 10)"><i class="fas fa-search-plus"></i></button>
+                        `;
+                        el.appendChild(controls);
+                        
+                        el.setAttribute('data-image', photoData[photoId]);
+                        el.setAttribute('data-photo-id', photoId);
+                    }
+                    
+                    // Restore styles
+                    if (photoStyles[photoId]) {
+                        const styles = photoStyles[photoId];
+                        el.style.width = styles.width;
+                        el.style.height = styles.height;
+                        el.style.borderWidth = styles.border;
+                        el.style.borderColor = styles.borderColor;
+                        el.style.borderRadius = styles.borderRadius;
+                        el.style.boxShadow = styles.boxShadow;
+                        el.setAttribute('data-shape', styles.shape);
+                        el.setAttribute('data-shadow', styles.shadow);
+                    }
+                });
+
+                const date = timestamp ? new Date(timestamp).toLocaleString() : 'Unknown time';
+                alert(`Draft loaded successfully! Last saved: ${date}`);
+            } catch (error) {
+                console.error('Load error:', error);
+                alert('Error loading draft. The saved data may be corrupted.');
+            }
+        }
+
+        function printPDF() {
+            // First save the current state
+            saveDraft();
+            
+            // Then trigger print
+            window.print();
+        }
+
+        // Auto-save on edit
+        document.addEventListener('input', function(e) {
+            if (e.target.contentEditable === 'true') {
+                // Auto-save every 10 seconds after changes
+                clearTimeout(window.autoSaveTimeout);
+                window.autoSaveTimeout = setTimeout(() => {
+                    try {
+                        const textData = {};
+                        document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                            textData[`text_${index}`] = el.innerHTML;
+                        });
+                        localStorage.setItem('obituaryProgram_autosave', JSON.stringify(textData));
+                        console.log('Auto-saved');
+                    } catch (error) {
+                        console.error('Auto-save failed:', error);
+                    }
+                }, 10000);
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Check for auto-save
+            const autoSaved = localStorage.getItem('obituaryProgram_autosave');
+            if (autoSaved && !localStorage.getItem('obituaryProgram_text')) {
+                if (confirm('Found auto-saved content from your last session. Would you like to load it?')) {
+                    try {
+                        const textData = JSON.parse(autoSaved);
+                        document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                            const saveId = `text_${index}`;
+                            if (textData[saveId]) {
+                                el.innerHTML = textData[saveId];
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Auto-load failed:', error);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
